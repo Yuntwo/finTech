@@ -1,0 +1,355 @@
+# Project Directory Structure
+
+- .golangci.yml
+- Dockerfile
+- LICENSE
+- Makefile
+- README-cn.md
+- README-devport.md
+- README-structure.md
+- README.md
+- **app/** 微服务项目组织结构，按功能模块分
+    - **balance/**
+        - README.md
+        - **cmd/** command，主程序入口，按照接口类型划分，不同于SpringBoot的MVC模式
+            - **api/** Web HTTP Restful API，实际上还是通过pb/目录调用rpc接口来实现，体现了`高复用`的思想
+                - .gitignore
+                - **etc/** 配置文件等
+                    - balance.yaml
+                - **internal/** 特殊目录，基于名称识别由Go编译器强制执行，只能被其父目录及其子目录中的代码导入，不能被其他目录甚至其他模块直接引用，否则编译报错。体现了`高内聚`的思想
+                    - **config/**
+                        - config.go
+                    - **handler/**
+                        - routes.go
+                    - **svc/** Service Context，统一管理上下文，便于扩展功能和引入依赖，体现了`易拓展`的思想
+                        - serviceContext.go
+                - main.go
+            - **pb/** RPC数据对象序列化工具，也可以用于Web JSON格式数据对象
+                - balance.pb.go Protobuf编译器根据.proto文件生成的Go语言的序列化代码，是应用程序实际依赖的代码，业务逻辑实现这里面的方法
+                - balance.proto Protobuf IDL(接口定义语言)，用于描述序列化对象结构以及涉及到的相关接口
+            - **rpc/** RPC API，gRPC
+                - .gitignore
+                - **etc/** 配置文件等
+                    - balance.yaml
+                - **internal/** 接口内部业务逻辑，按照职责而非功能模块划分
+                    - **config/** 管理配置加载逻辑，集中式处理项目的配置初始化和解析
+                        - config.go Q:
+                    - **logic/** `业务逻辑层，处理服务的核心业务逻辑`
+                        - balance.go
+                    - **model/** 定义数据模型和数据库交互的逻辑，Q:
+                        - balance.go
+                        - balance_change_log.go
+                    - **server/** 将业务逻辑(logic/)与RPC服务接口绑定
+                        - balanceServer.go
+                    - **svc/** Service Context，统一管理上下文，便于扩展功能和引入依赖
+                        - serviceContext.go
+                - main.go 项目的入口文件
+    - **community/**
+        - README.md
+        - **cmd/**
+            - **api/**
+                - .gitignore
+                - **etc/**
+                    - community.yaml
+                - **internal/**
+                    - **config/**
+                        - config.go
+                    - **handler/**
+                        - **controllers/**
+                            - community.go
+                        - routes.go
+                    - **logic/**
+                        - pushPostLogic.go
+                    - **svc/**
+                        - serviceContext.go
+                - main.go
+            - **pb/**
+                - community.pb.go
+                - community.proto
+            - **rpc/**
+                - .gitignore
+                - **etc/**
+                    - community.yaml
+                - **internal/**
+                    - **config/**
+                        - config.go
+                    - **model/**
+                        - comment.go
+                        - comment_content.go
+                        - comment_reply.go
+                        - post.go
+                        - post_collection.go
+                        - post_content.go
+                        - post_star.go
+                    - **server/**
+                        - communityServer.go
+                    - **svc/**
+                        - serviceContext.go
+                - main.go
+    - **lottery/**
+        - .gitignore
+        - Dockerfile
+        - LICENSE
+        - Makefile
+        - README.md
+        - **api/**
+            - buf.lock
+            - buf.yaml
+            - **lottery/**
+                - **v1/**
+                    - lottery.pb.go
+                    - lottery.pb.gw.go
+                    - lottery.pb.validate.go
+                    - lottery.proto
+                    - lottery_grpc.pb.go
+            - openapi.yaml
+        - buf.gen.yaml
+        - buf.work.yaml
+        - **cmd/**
+            - main.go
+            - wire.go
+            - wire_gen.go
+        - **etc/**
+            - config.yaml
+        - go.mod
+        - go.sum
+        - **internal/**
+            - README.md
+            - **config/**
+                - config.go
+            - **server/**
+                - grpc.go
+                - http.go
+                - server.go
+            - **service/**
+                - lottery.go
+                - service.go
+            - **svc/**
+                - serviceContext.go
+    - **merchants/**
+        - README.md
+        - **cmd/**
+            - **api/**
+                - .gitignore
+                - **etc/**
+                    - merchants.yaml
+                - **internal/**
+                    - **config/**
+                        - config.go
+                    - **handler/**
+                        - **controllers/**
+                            - merchants.go
+                        - routes.go
+                    - **logic/**
+                        - merchants.go
+                    - **svc/**
+                        - serviceContext.go
+                - main.go
+            - **pb/**
+                - merchants.pb.go
+                - merchants.proto
+            - **rpc/**
+                - .gitignore
+                - **etc/**
+                    - merchants.yaml
+                - **internal/**
+                    - **config/**
+                        - config.go
+                    - **logic/**
+                        - merchants.go
+                    - **model/**
+                        - merchant.go
+                    - **server/**
+                        - merchantServer.go
+                    - **svc/**
+                        - serviceContext.go
+                - main.go
+    - **mqueue/**
+        - **cmd/**
+            - **job/**
+                - .gitignore
+                - README.md
+                - **etc/**
+                    - config.yaml
+                - **internal/**
+                    - **config/**
+                        - config.go
+                    - **logic/**
+                        - routes.go
+                    - **svc/**
+                        - asynqServer.go
+                        - serverContext.go
+                    - **types/**
+                        - jobtype.go
+                - main.go
+    - **marketing/** 营销系统
+        - README.md
+        - **cmd/**
+            - **api/**
+                - **etc/**
+                    - marketing.yaml
+                - **internal/**
+                    - **config/**
+                        - config.go
+                    - **handler/**
+                        - routes.go
+                    - **logic/**
+                        - promotion.go `营销投放`
+                        - activity.go `营销活动`
+                        - asset.go `营销资产`
+                    - **svc/**
+                        - serviceContext.go
+                - main.go
+            - **pb/**
+                - marketing.pb.go
+                - marketing.proto
+            - **rpc/**
+                - **etc/**
+                    - marketing.yaml
+                - **internal/**
+                    - **config/**
+                        - config.go
+                    - **logic/**
+                        - promotion.go
+                        - activity.go
+                        - asset.go
+                    - **model/**
+                        - marketing.go
+                    - **server/**
+                        - marketingServer.go
+                    - **svc/**
+                        - serviceContext.go
+                - main.go
+    - **user/**
+        - README.md
+        - **cmd/**
+            - **api/**
+                - .gitignore
+                - **etc/**
+                    - user.yaml
+                - **internal/**
+                    - **config/**
+                        - config.go
+                    - **handler/**
+                        - **controllers/**
+                            - user.go
+                        - routes.go
+                    - **logic/**
+                        - user.go
+                    - **svc/**
+                        - serviceContext.go
+                - main.go
+            - buf.gen.yaml
+            - **pb/**
+                - buf.yaml
+                - user.pb.go
+                - user.proto
+                - user_grpc.pb.go
+            - **rpc/**
+                - .gitignore
+                - **etc/**
+                    - user.yaml
+                - **internal/**
+                    - **config/**
+                        - config.go
+                    - **logic/**
+                        - user.go
+                    - **model/**
+                        - user.go
+                    - **server/**
+                        - userServer.go
+                    - **svc/**
+                        - serviceContext.go
+                - main.go
+- **common/** 多个微服务(app/*/)内部都会用到的功能集合
+    - README.md
+    - **conf/**
+        - api.go
+        - db.go
+        - jwt.go
+        - redis.go
+        - viper.go
+    - **errcode/**
+        - error.go
+        - **pb/**
+            - error.pb.go
+            - error.proto
+    - functions.go
+    - **middleware/** 中间件
+        - auth.go 用户鉴权
+        - cors.go
+    - **response/**
+        - response.go
+- **deployments/**
+    - **apisix_conf/**
+        - config.yaml
+    - **apisix_log/**
+        - .keep
+    - **dashboard_conf/**
+        - conf.yaml
+    - docker-compose-alpine.yml
+    - docker-compose-arm64.yml
+    - docker-compose.yml
+    - **etcd_conf/**
+        - etcd.conf.yml
+    - **grafana_conf/**
+        - **config/**
+            - grafana.ini
+        - **dashboards/**
+            - apisix-grafana-dashboard.json
+        - **provisioning/**
+            - **dashboards/**
+                - all.yaml
+            - **datasources/**
+                - all.yaml
+    - **mkcert/**
+        - README.md
+        - lvh.me+1-key.pem
+        - lvh.me+1.pem
+        - rootCA-key.pem
+        - rootCA.pem
+    - **prometheus_conf/**
+        - prometheus.yml
+    - **sql/**
+        - mall_go_balance.sql
+        - mall_go_community.sql
+        - mall_go_merchants.sql
+        - mall_go_user.sql
+    - **upstream/**
+        - web1.conf
+        - web2.conf
+- docker-compose-env.yml
+- docker-compose.yml
+- **docs/**
+    - README.md
+    - mrpcreadme.md
+- go.mod
+- go.sum 对依赖及版本的checksum，自动生成，应加入版本控制。Q:不是很懂
+- **pkg/** 跨微服务可复用的公共工具包，和业务逻辑无关，由开发者封装；非依赖第三方包，其通过go mod vendor 命令下载到 vendor/ 目录中
+    - .gitkeep
+    - **convert/**
+        - convert.go
+        - convert_test.go
+    - **di/**
+        - logrus.go
+        - server.go
+        - zap.go
+    - gorm.go
+    - **hash/**
+        - hash.go
+        - hash_test.go
+    - **jwtx/**
+        - jwtx.go
+    - **lock/**
+        - lock.go
+    - redis.go
+    - session.go
+    - **uuid/**
+        - uuid.go
+        - uuid_test.go
+    - **validator/**
+        - validator.go
+    - xsql.go
+
+
+Q:用户鉴权怎么做的？
