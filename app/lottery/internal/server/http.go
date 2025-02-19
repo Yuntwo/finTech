@@ -4,14 +4,12 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	lottery "mall-go/app/lottery/api/lottery/v1"
 	"mall-go/app/lottery/internal/config"
-	"mall-go/app/lottery/internal/service"
-
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 )
 
-func NewHttpServer(c *config.Config, srv *service.LotteryService) *http.Server {
+func NewHttpServer(c *config.Config, srv *LotteryServer) *http.Server {
 	httpServer := &http.Server{}
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)

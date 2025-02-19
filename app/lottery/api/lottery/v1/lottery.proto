@@ -1,3 +1,5 @@
+// 这个文件需要使用protoc额外编译成.pb.go文件才能被go编译器直接使用
+// 版本不是很重要，所以一般不在部署时编译，而是在开发时编译
 syntax = "proto3";
 
 package lottery.api.v1;
