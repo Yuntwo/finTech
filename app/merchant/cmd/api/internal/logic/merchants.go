@@ -4,8 +4,8 @@ import (
 	"context"
 
 	balancepb "mall-go/app/balance/cmd/pb"
-	"mall-go/app/merchants/cmd/api/internal/svc"
-	"mall-go/app/merchants/cmd/pb"
+	"mall-go/app/merchant/cmd/api/internal/svc"
+	"mall-go/app/merchant/cmd/pb"
 )
 
 type MerchantsLogic struct {

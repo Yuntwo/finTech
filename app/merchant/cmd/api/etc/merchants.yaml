@@ -1,4 +1,4 @@
-Name: merchants-api
+Name: merchant-service
 Addr: ":10091"
 Mode: "release"
 
@@ -6,7 +6,7 @@ JwtAuth:
   Secret: mall-go
 
 MerchantsRpcConf:
-  Target: "merchants-rpc:10092"
+  Target: "merchant-rpc:10092"
   Timeout: 60
 
 BalanceRpcConf:

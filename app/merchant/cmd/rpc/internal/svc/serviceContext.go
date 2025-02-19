@@ -4,7 +4,7 @@ import (
 	"github.com/go-redis/redis"
 	"github.com/mix-go/xsql"
 	"gorm.io/gorm"
-	"mall-go/app/merchants/cmd/rpc/internal/config"
+	"mall-go/app/merchant/cmd/rpc/internal/config"
 	"mall-go/pkg"
 )
 

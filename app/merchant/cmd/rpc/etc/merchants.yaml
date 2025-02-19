@@ -1,4 +1,4 @@
-Name: merchants-rpc
+Name: merchant-rpc
 Addr: ":10092"
 Mode: "release"
 

@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"mall-go/app/merchants/cmd/api/internal/config"
-	"mall-go/app/merchants/cmd/api/internal/handler"
-	"mall-go/app/merchants/cmd/api/internal/svc"
+	"mall-go/app/merchant/cmd/api/internal/config"
+	"mall-go/app/merchant/cmd/api/internal/handler"
+	"mall-go/app/merchant/cmd/api/internal/svc"
 	conf "mall-go/common/conf"
 	"mall-go/pkg/di"
 	_ "mall-go/pkg/di"

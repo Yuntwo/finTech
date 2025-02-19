@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"gorm.io/gorm"
-	"mall-go/app/merchants/cmd/pb"
-	"mall-go/app/merchants/cmd/rpc/internal/model"
-	"mall-go/app/merchants/cmd/rpc/internal/svc"
+	"mall-go/app/merchant/cmd/pb"
+	"mall-go/app/merchant/cmd/rpc/internal/model"
+	"mall-go/app/merchant/cmd/rpc/internal/svc"
 )
 
 type MerchantsLogic struct {
