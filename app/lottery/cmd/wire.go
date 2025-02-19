@@ -8,7 +8,6 @@ package main
 import (
 	"mall-go/app/lottery/internal/config"
 	"mall-go/app/lottery/internal/server"
-	"mall-go/app/lottery/internal/service"
 	"mall-go/app/lottery/internal/svc"
 
 	"github.com/google/wire"
@@ -16,5 +15,5 @@ import (
 
 // initApp init app application.
 func initApp(c *config.Config) (*server.AppServer, error) {
-	panic(wire.Build(svc.ProviderSet, service.ProviderSet, server.ProviderSet, server.NewApp))
+	panic(wire.Build(svc.ProviderSet, server.ProviderSet, server.ProviderSet, server.NewApp))
 }

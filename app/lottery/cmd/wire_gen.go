@@ -9,7 +9,6 @@ package main
 import (
 	"mall-go/app/lottery/internal/config"
 	"mall-go/app/lottery/internal/server"
-	"mall-go/app/lottery/internal/service"
 	"mall-go/app/lottery/internal/svc"
 )
 
@@ -18,7 +17,7 @@ import (
 // initApp init app application.
 func initApp(c *config.Config) (*server.AppServer, error) {
 	serviceContext := svc.NewServiceContext(c)
-	lotteryService := service.NewLotteryService(serviceContext)
+	lotteryService := server.NewLotteryServer(serviceContext)
 	httpServer := server.NewHttpServer(c, lotteryService)
 	rpcServer := server.NewGrpcServer(c, serviceContext)
 	appServer, err := server.NewApp(serviceContext, lotteryService, httpServer, rpcServer)
