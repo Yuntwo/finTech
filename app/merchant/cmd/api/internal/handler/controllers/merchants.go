@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	balancepb "mall-go/app/balance/cmd/pb"
-	"mall-go/app/merchants/cmd/api/internal/logic"
-	"mall-go/app/merchants/cmd/pb"
+	"mall-go/app/merchant/cmd/api/internal/logic"
+	"mall-go/app/merchant/cmd/pb"
 	"mall-go/common"
 	"mall-go/common/response"
 )

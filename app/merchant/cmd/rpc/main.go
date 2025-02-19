@@ -5,15 +5,15 @@ import (
 
 	"github.com/mix-plus/go-mixplus/mrpc"
 	"google.golang.org/grpc"
-	"mall-go/app/merchants/cmd/pb"
-	"mall-go/app/merchants/cmd/rpc/internal/config"
-	"mall-go/app/merchants/cmd/rpc/internal/server"
-	"mall-go/app/merchants/cmd/rpc/internal/svc"
+	"mall-go/app/merchant/cmd/pb"
+	"mall-go/app/merchant/cmd/rpc/internal/config"
+	"mall-go/app/merchant/cmd/rpc/internal/server"
+	"mall-go/app/merchant/cmd/rpc/internal/svc"
 	conf "mall-go/common/conf"
 	_ "mall-go/pkg/di"
 )
 
-var configFile = flag.String("f", "etc/merchants.yaml", "the config file")
+var configFile = flag.String("f", "etc/merchant.yaml", "the config file")
 
 func main() {
 	flag.Parse()

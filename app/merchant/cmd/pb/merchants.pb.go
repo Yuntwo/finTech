@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.26.0
 // 	protoc        v3.17.2
-// source: merchants.proto
+// source: merchant.proto
 
 package pb
 
@@ -665,24 +665,24 @@ func file_merchants_proto_rawDescGZIP() []byte {
 
 var file_merchants_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_merchants_proto_goTypes = []interface{}{
-	(*JoinMerchantRequest)(nil),    // 0: mall.rpc.merchants.JoinMerchantRequest
-	(*JoinMerchantResponse)(nil),   // 1: mall.rpc.merchants.JoinMerchantResponse
-	(*UpdateMerchantRequest)(nil),  // 2: mall.rpc.merchants.UpdateMerchantRequest
-	(*UpdateMerchantResponse)(nil), // 3: mall.rpc.merchants.UpdateMerchantResponse
-	(*CloseMerchantRequest)(nil),   // 4: mall.rpc.merchants.CloseMerchantRequest
-	(*CloseMerchantResponse)(nil),  // 5: mall.rpc.merchants.CloseMerchantResponse
-	(*GetMerchantRequest)(nil),     // 6: mall.rpc.merchants.GetMerchantRequest
-	(*GetMerchantResponse)(nil),    // 7: mall.rpc.merchants.GetMerchantResponse
+	(*JoinMerchantRequest)(nil),    // 0: mall.rpc.merchant.JoinMerchantRequest
+	(*JoinMerchantResponse)(nil),   // 1: mall.rpc.merchant.JoinMerchantResponse
+	(*UpdateMerchantRequest)(nil),  // 2: mall.rpc.merchant.UpdateMerchantRequest
+	(*UpdateMerchantResponse)(nil), // 3: mall.rpc.merchant.UpdateMerchantResponse
+	(*CloseMerchantRequest)(nil),   // 4: mall.rpc.merchant.CloseMerchantRequest
+	(*CloseMerchantResponse)(nil),  // 5: mall.rpc.merchant.CloseMerchantResponse
+	(*GetMerchantRequest)(nil),     // 6: mall.rpc.merchant.GetMerchantRequest
+	(*GetMerchantResponse)(nil),    // 7: mall.rpc.merchant.GetMerchantResponse
 }
 var file_merchants_proto_depIdxs = []int32{
-	0, // 0: mall.rpc.merchants.Merchants.JoinMerchant:input_type -> mall.rpc.merchants.JoinMerchantRequest
-	2, // 1: mall.rpc.merchants.Merchants.UpdateMerchant:input_type -> mall.rpc.merchants.UpdateMerchantRequest
-	4, // 2: mall.rpc.merchants.Merchants.CloseMerchant:input_type -> mall.rpc.merchants.CloseMerchantRequest
-	6, // 3: mall.rpc.merchants.Merchants.GetMerchant:input_type -> mall.rpc.merchants.GetMerchantRequest
-	1, // 4: mall.rpc.merchants.Merchants.JoinMerchant:output_type -> mall.rpc.merchants.JoinMerchantResponse
-	3, // 5: mall.rpc.merchants.Merchants.UpdateMerchant:output_type -> mall.rpc.merchants.UpdateMerchantResponse
-	5, // 6: mall.rpc.merchants.Merchants.CloseMerchant:output_type -> mall.rpc.merchants.CloseMerchantResponse
-	7, // 7: mall.rpc.merchants.Merchants.GetMerchant:output_type -> mall.rpc.merchants.GetMerchantResponse
+	0, // 0: mall.rpc.merchant.Merchants.JoinMerchant:input_type -> mall.rpc.merchant.JoinMerchantRequest
+	2, // 1: mall.rpc.merchant.Merchants.UpdateMerchant:input_type -> mall.rpc.merchant.UpdateMerchantRequest
+	4, // 2: mall.rpc.merchant.Merchants.CloseMerchant:input_type -> mall.rpc.merchant.CloseMerchantRequest
+	6, // 3: mall.rpc.merchant.Merchants.GetMerchant:input_type -> mall.rpc.merchant.GetMerchantRequest
+	1, // 4: mall.rpc.merchant.Merchants.JoinMerchant:output_type -> mall.rpc.merchant.JoinMerchantResponse
+	3, // 5: mall.rpc.merchant.Merchants.UpdateMerchant:output_type -> mall.rpc.merchant.UpdateMerchantResponse
+	5, // 6: mall.rpc.merchant.Merchants.CloseMerchant:output_type -> mall.rpc.merchant.CloseMerchantResponse
+	7, // 7: mall.rpc.merchant.Merchants.GetMerchant:output_type -> mall.rpc.merchant.GetMerchantResponse
 	4, // [4:8] is the sub-list for method output_type
 	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -845,7 +845,7 @@ func NewMerchantsClient(cc grpc.ClientConnInterface) MerchantsClient {
 
 func (c *merchantsClient) JoinMerchant(ctx context.Context, in *JoinMerchantRequest, opts ...grpc.CallOption) (*JoinMerchantResponse, error) {
 	out := new(JoinMerchantResponse)
-	err := c.cc.Invoke(ctx, "/mall.rpc.merchants.Merchants/JoinMerchant", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/mall.rpc.merchant.Merchants/JoinMerchant", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -854,7 +854,7 @@ func (c *merchantsClient) JoinMerchant(ctx context.Context, in *JoinMerchantRequ
 
 func (c *merchantsClient) UpdateMerchant(ctx context.Context, in *UpdateMerchantRequest, opts ...grpc.CallOption) (*UpdateMerchantResponse, error) {
 	out := new(UpdateMerchantResponse)
-	err := c.cc.Invoke(ctx, "/mall.rpc.merchants.Merchants/UpdateMerchant", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/mall.rpc.merchant.Merchants/UpdateMerchant", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -863,7 +863,7 @@ func (c *merchantsClient) UpdateMerchant(ctx context.Context, in *UpdateMerchant
 
 func (c *merchantsClient) CloseMerchant(ctx context.Context, in *CloseMerchantRequest, opts ...grpc.CallOption) (*CloseMerchantResponse, error) {
 	out := new(CloseMerchantResponse)
-	err := c.cc.Invoke(ctx, "/mall.rpc.merchants.Merchants/CloseMerchant", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/mall.rpc.merchant.Merchants/CloseMerchant", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -872,7 +872,7 @@ func (c *merchantsClient) CloseMerchant(ctx context.Context, in *CloseMerchantRe
 
 func (c *merchantsClient) GetMerchant(ctx context.Context, in *GetMerchantRequest, opts ...grpc.CallOption) (*GetMerchantResponse, error) {
 	out := new(GetMerchantResponse)
-	err := c.cc.Invoke(ctx, "/mall.rpc.merchants.Merchants/GetMerchant", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/mall.rpc.merchant.Merchants/GetMerchant", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -922,7 +922,7 @@ func _Merchants_JoinMerchant_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/mall.rpc.merchants.Merchants/JoinMerchant",
+		FullMethod: "/mall.rpc.merchant.Merchants/JoinMerchant",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MerchantsServer).JoinMerchant(ctx, req.(*JoinMerchantRequest))
@@ -940,7 +940,7 @@ func _Merchants_UpdateMerchant_Handler(srv interface{}, ctx context.Context, dec
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/mall.rpc.merchants.Merchants/UpdateMerchant",
+		FullMethod: "/mall.rpc.merchant.Merchants/UpdateMerchant",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MerchantsServer).UpdateMerchant(ctx, req.(*UpdateMerchantRequest))
@@ -958,7 +958,7 @@ func _Merchants_CloseMerchant_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/mall.rpc.merchants.Merchants/CloseMerchant",
+		FullMethod: "/mall.rpc.merchant.Merchants/CloseMerchant",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MerchantsServer).CloseMerchant(ctx, req.(*CloseMerchantRequest))
@@ -976,7 +976,7 @@ func _Merchants_GetMerchant_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/mall.rpc.merchants.Merchants/GetMerchant",
+		FullMethod: "/mall.rpc.merchant.Merchants/GetMerchant",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MerchantsServer).GetMerchant(ctx, req.(*GetMerchantRequest))
@@ -985,7 +985,7 @@ func _Merchants_GetMerchant_Handler(srv interface{}, ctx context.Context, dec fu
 }
 
 var _Merchants_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "mall.rpc.merchants.Merchants",
+	ServiceName: "mall.rpc.merchant.Merchants",
 	HandlerType: (*MerchantsServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -1006,5 +1006,5 @@ var _Merchants_serviceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "merchants.proto",
+	Metadata: "merchant.proto",
 }

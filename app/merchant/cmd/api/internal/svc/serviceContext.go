@@ -3,8 +3,8 @@ package svc
 import (
 	"github.com/mix-plus/go-mixplus/mrpc"
 	balancepb "mall-go/app/balance/cmd/pb"
-	"mall-go/app/merchants/cmd/api/internal/config"
-	"mall-go/app/merchants/cmd/pb"
+	"mall-go/app/merchant/cmd/api/internal/config"
+	"mall-go/app/merchant/cmd/pb"
 	"mall-go/pkg/jwtx"
 )
 

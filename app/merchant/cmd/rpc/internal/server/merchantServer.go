@@ -3,9 +3,9 @@ package server
 import (
 	"context"
 
-	"mall-go/app/merchants/cmd/pb"
-	"mall-go/app/merchants/cmd/rpc/internal/logic"
-	"mall-go/app/merchants/cmd/rpc/internal/svc"
+	"mall-go/app/merchant/cmd/pb"
+	"mall-go/app/merchant/cmd/rpc/internal/logic"
+	"mall-go/app/merchant/cmd/rpc/internal/svc"
 	"mall-go/common/errcode"
 )
 
