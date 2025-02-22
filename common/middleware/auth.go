@@ -15,20 +15,30 @@ import (
 )
 
 // AuthMiddleware 这种JWT验证方法直接调用jwt包的token相关处理方法，不需要自己实现JWT类型，通过JWT实例来调用方法，更简洁
+// 鉴权核心参数其实只有一个secret
 func AuthMiddleware(secret string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 获取 token
 		tokenString := c.GetHeader("Authorization")
+		// strings.Index(标准库函数)returns the index of the first instance of the substring, or -1 if the substring is not present
+		// 这里是判断token是否以Bearer开头，故与0比较
 		if strings.Index(tokenString, "Bearer ") != 0 {
+			// 这里定义type H是为了缩写map[string]interface{}
+			// 写入响应错误码和信息并设置响应格式(Content-Type)为JSON。Q:不太确定后续是否可以多次写入并覆盖
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"status":  http.StatusInternalServerError,
 				"message": "failed to extract token",
 			})
+			// 不会中断当前handler的执行，但会中断当前handler之后的pending handler的执行
 			c.Abort()
 			return
 		}
 
 		// 解码
+		// func(token *jwt.Token) (interface{}, error)是jwt.Parse要求传递的匿名函数，接收一个jwt.Token类型的参数，返回一个interface{}和error类型的值
+		//  这个函数receive the parsed token and should return the cryptographic key for verifying the signature
+		//  除了用业务定义的密钥验证签名之外，还要验证解析出的token所使用的加密算法(alg)和业务期望的一致
+		// Parse方法的解析过程是隐式的，无需业务实现
 		token, err := jwt.Parse(tokenString[7:], func(token *jwt.Token) (interface{}, error) {
 			// Don't forget to validate the alg is what you expect:
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -36,6 +46,7 @@ func AuthMiddleware(secret string) gin.HandlerFunc {
 			}
 
 			// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
+			// 这里是类型转换
 			return []byte(secret), nil
 		})
 		if err != nil {
