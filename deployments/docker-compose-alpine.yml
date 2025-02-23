@@ -10,7 +10,7 @@ services:
     restart: always
     volumes:
       - ./apisix_log:/usr/local/apisix/logs
-      - ./apisix_conf/config.yaml:/usr/local/apisix/conf/config.yaml:ro
+      - ./apisix_conf/config.yaml:/usr/local/apisix/config/config.yaml:ro
     depends_on:
       - etcd
     ports:
@@ -40,7 +40,7 @@ services:
     image: nginx:1.18.0-alpine
     restart: always
     volumes:
-      - ./upstream/web1.conf:/etc/nginx/nginx.conf
+      - ./upstream/web1.config:/etc/nginx/nginx.config
     ports:
       - "9081:80/tcp"
     environment:
@@ -52,7 +52,7 @@ services:
     image: nginx:1.18.0-alpine
     restart: always
     volumes:
-      - ./upstream/web2.conf:/etc/nginx/nginx.conf
+      - ./upstream/web2.config:/etc/nginx/nginx.config
     ports:
       - "9082:80/tcp"
     environment:

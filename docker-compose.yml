@@ -65,12 +65,12 @@ services:
     build:
       context: .
       args:
-        path: "/app/merchants/cmd/api"
+        path: "/app/merchant/cmd/service"
     ports:
       - "10091:10091/tcp"
     expose:
       - 10091
-    command: ./bin/main -f ./etc/merchants.yaml
+    command: ./bin/main -f ./etc/merchant.yaml
     networks:
       - mall-net
 
@@ -79,12 +79,12 @@ services:
     build:
       context: .
       args:
-        path: "/app/merchants/cmd/rpc"
+        path: "/app/merchant/cmd/rpc"
     ports:
       - "10092:10092/tcp"
     expose:
       - 10092
-    command: ./bin/main -f ./etc/merchants.yaml
+    command: ./bin/main -f ./etc/merchant.yaml
     networks:
       - mall-net
 
@@ -128,16 +128,16 @@ services:
       - mall-net
 
 #  # 优惠券 API
-#  coupon-api:
+#  coupon-service:
 #    build:
 #      context: .
 #      args:
-#        path: "/app/coupon/cmd/api"
+#        path: "/app/coupon/cmd/service"
 #    ports:
 #      - "10021:8080/tcp"
 #    expose:
 #      - 8080
-#    command: ./bin/main api -f etc/config.yaml
+#    command: ./bin/main service -f etc/config.yaml
 #    networks:
 #      - mall-net
 #
@@ -157,16 +157,16 @@ services:
 #
 #
 #  # 配送 API
-#  delivery-api:
+#  delivery-service:
 #    build:
 #      context: .
 #      args:
-#        path: "/app/delivery/cmd/api"
+#        path: "/app/delivery/cmd/service"
 #    ports:
 #      - "10031:8080/tcp"
 #    expose:
 #      - 8080
-#    command: ./bin/main api -f etc/config.yaml
+#    command: ./bin/main service -f etc/config.yaml
 #    networks:
 #      - mall-net
 #
@@ -185,16 +185,16 @@ services:
 #      - mall-net
 #
 #  # 生鲜 API
-#  fresh-api:
+#  fresh-service:
 #    build:
 #      context: .
 #      args:
-#        path: "/app/fresh/cmd/api"
+#        path: "/app/fresh/cmd/service"
 #    ports:
 #      - "10041:8080/tcp"
 #    expose:
 #      - 8080
-#    command: ./bin/main api -f etc/config.yaml
+#    command: ./bin/main service -f etc/config.yaml
 #    networks:
 #      - mall-net
 #
@@ -213,16 +213,16 @@ services:
 #      - mall-net
 #
 #  # 商品 API
-#  goods-api:
+#  goods-service:
 #    build:
 #      context: .
 #      args:
-#        path: "/app/goods/cmd/api"
+#        path: "/app/goods/cmd/service"
 #    ports:
 #      - "10051:8080/tcp"
 #    expose:
 #      - 8080
-#    command: ./bin/main api -f etc/config.yaml
+#    command: ./bin/main service -f etc/config.yaml
 #    networks:
 #      - mall-net
 #
@@ -241,16 +241,16 @@ services:
 #      - mall-net
 #
 #  # IM API
-#  im-api:
+#  im-service:
 #    build:
 #      context: .
 #      args:
-#        path: "/app/im/cmd/api"
+#        path: "/app/im/cmd/service"
 #    ports:
 #      - "10061:8080/tcp"
 #    expose:
 #      - 8080
-#    command: ./bin/main api -f etc/config.yaml
+#    command: ./bin/main service -f etc/config.yaml
 #    networks:
 #      - mall-net
 #
@@ -269,16 +269,16 @@ services:
 #      - mall-net
 #
 #  # 分期 API
-#  installment-api:
+#  installment-service:
 #    build:
 #      context: .
 #      args:
-#        path: "/app/installment/cmd/api"
+#        path: "/app/installment/cmd/service"
 #    ports:
 #      - "10071:8080/tcp"
 #    expose:
 #      - 8080
-#    command: ./bin/main api -f etc/config.yaml
+#    command: ./bin/main service -f etc/config.yaml
 #    networks:
 #      - mall-net
 #
@@ -325,16 +325,16 @@ services:
 #      - mall-net
 #
 #  # 订单 API
-#  order-api:
+#  order-service:
 #    build:
 #      context: .
 #      args:
-#        path: "/app/order/cmd/api"
+#        path: "/app/order/cmd/service"
 #    ports:
 #      - "10101:8080/tcp"
 #    expose:
 #      - 8080
-#    command: ./bin/main api -f etc/config.yaml
+#    command: ./bin/main service -f etc/config.yaml
 #    networks:
 #      - mall-net
 #
@@ -354,16 +354,16 @@ services:
 #      - mall-net
 #
 #  # 支付 API
-#  payment-api:
+#  payment-service:
 #    build:
 #      context: .
 #      args:
-#        path: "/app/payment/cmd/api"
+#        path: "/app/payment/cmd/service"
 #    ports:
 #      - "10111:8080/tcp"
 #    expose:
 #      - 8080
-#    command: ./bin/main api -f etc/config.yaml
+#    command: ./bin/main service -f etc/config.yaml
 #    networks:
 #      - mall-net
 #
@@ -382,16 +382,16 @@ services:
 #      - mall-net
 #
 #  # 众筹 API
-#  raise-api:
+#  raise-service:
 #    build:
 #      context: .
 #      args:
-#        path: "/app/raise/cmd/api"
+#        path: "/app/raise/cmd/service"
 #    ports:
 #      - "10121:8080/tcp"
 #    expose:
 #      - 8080
-#    command: ./bin/main api -f etc/config.yaml
+#    command: ./bin/main service -f etc/config.yaml
 #    networks:
 #      - mall-net
 #
@@ -410,16 +410,16 @@ services:
 #      - mall-net
 #
 #  # 秒杀 API
-#  seconds-api:
+#  seconds-service:
 #    build:
 #      context: .
 #      args:
-#        path: "/app/seconds/cmd/api"
+#        path: "/app/seconds/cmd/service"
 #    ports:
 #      - "10131:8080/tcp"
 #    expose:
 #      - 8080
-#    command: ./bin/main api -f etc/config.yaml
+#    command: ./bin/main service -f etc/config.yaml
 #    networks:
 #      - mall-net
 #
@@ -438,16 +438,16 @@ services:
 #      - mall-net
 #
 #  # 拼团 API
-#  spellgroup-api:
+#  spellgroup-service:
 #    build:
 #      context: .
 #      args:
-#        path: "/app/spellgroup/cmd/api"
+#        path: "/app/spellgroup/cmd/service"
 #    ports:
 #      - "10141:8080/tcp"
 #    expose:
 #      - 8080
-#    command: ./bin/main api -f etc/config.yaml
+#    command: ./bin/main service -f etc/config.yaml
 #    networks:
 #      - mall-net
 #
