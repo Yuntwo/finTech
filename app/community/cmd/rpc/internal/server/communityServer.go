@@ -7,6 +7,9 @@ import (
 	"mall-go/app/community/cmd/rpc/internal/svc"
 )
 
+// CommunityServer 实现了pb.CommunityServer接口
+// go的结构体实现接口是隐式实现，必须要实现接口的[所有]方法，go编译器会自动识别实现关系
+// go中结构体与接口的实现关系类似于java中的类与接口的实现关系
 type CommunityServer struct {
 	svcCtx *svc.ServiceContext
 }
