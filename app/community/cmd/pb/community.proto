@@ -5,6 +5,7 @@ package mall.rpc.community;
 option go_package = "/;pb";
 
 
+// 会自动创建<Community>Server接口
 service Community {
   // 文章列表
   rpc GetPostList(GetPostListRequest) returns(GetPostListResponse) {}

@@ -5,7 +5,7 @@ services:
     image: apache/apisix-dashboard:2.7
     restart: always
     volumes:
-    - ./dashboard_conf/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml
+    - ./dashboard_conf/config.yaml:/usr/local/apisix-dashboard/config/config.yaml
     ports:
     - "9000:9000"
     networks:
@@ -16,7 +16,7 @@ services:
     restart: always
     volumes:
       - ./apisix_log:/usr/local/apisix/logs
-      - ./apisix_conf/config.yaml:/usr/local/apisix/conf/config.yaml:ro
+      - ./apisix_conf/config.yaml:/usr/local/apisix/config/config.yaml:ro
     depends_on:
       - etcd
     ##network_mode: host
@@ -46,7 +46,7 @@ services:
     image: nginx:1.19.0-alpine
     restart: always
     volumes:
-      - ./upstream/web1.conf:/etc/nginx/nginx.conf
+      - ./upstream/web1.config:/etc/nginx/nginx.config
     ports:
       - "9181:80/tcp"
     environment:
@@ -58,7 +58,7 @@ services:
     image: nginx:1.19.0-alpine
     restart: always
     volumes:
-      - ./upstream/web2.conf:/etc/nginx/nginx.conf
+      - ./upstream/web2.config:/etc/nginx/nginx.config
     ports:
       - "9182:80/tcp"
     environment:

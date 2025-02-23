@@ -1,4 +1,4 @@
-Name: community-api
+Name: community-service
 Addr: ":10151"
 Mode: release
 
