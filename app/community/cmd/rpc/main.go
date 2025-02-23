@@ -26,9 +26,13 @@ func main() {
 
 	ctx := svc.NewServiceContext(c)
 	svc.Context = ctx
+	// 创建server.CommunityServer结构体实例，主要是定义业务逻辑
 	srv := server.NewCommunityServer(ctx)
 
+	// 实际启动一个符合server.CommunityServer业务逻辑的grpc服务器
 	s := mrpc.MustNewServer(c.RpcServerConf, func(g *grpc.Server) {
+		// 函数参数srv签名本身是pb.CommunityServer接口，但是server.CommunityServer结构体实现了该接口，所以可以传入
+		// Go编译器会自动匹配server.CommunityServer实现了pb.CommunityServer接口的方法
 		pb.RegisterCommunityServer(g, srv)
 
 	})
