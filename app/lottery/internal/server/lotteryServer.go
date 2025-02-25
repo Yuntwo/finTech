@@ -13,7 +13,10 @@ import (
 )
 
 // ProviderSet is server providers.
-var ProviderSet = wire.NewSet(NewGrpcServer, NewHttpServer)
+// ProviderSet主要是方便组合多个提供者(即函数)放在一起，也可以不这样包装直接一个一个传
+// 还可以使用wire.Struct将某个结构体中的字段标注为依赖项
+// 注意区别这三个server，前两者是具体通信协议的server实例，最后一个是业务逻辑的而非实际启动接口的server实例
+var ProviderSet = wire.NewSet(NewGrpcServer, NewHttpServer, NewLotteryServer)
 
 type AppServer struct {
 	SvcCtx     *svc.ServiceContext

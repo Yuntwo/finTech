@@ -25,7 +25,6 @@ run:
 
 .PHONY: build
 build:
-	# TODO 弄懂wire依赖注入工具
 	CGO_ENABLED=0 go build -ldflags "-X main.Version=$(VERSION)" -tags wireinject -o service ./cmd/main.go ./cmd/wire_gen.go
 
 .PHONY: api
@@ -36,4 +35,7 @@ api:
 # generate
 generate:
 	go get github.com/google/wire/cmd/wire@latest
+	# go generate是Go语言自带的一个命令，会查找当前Go源文件中的//go:generate 注释，并依(文件系统扫描的顺序)次执行注释后的命令
+	# go generate并不直接编译代码，而是执行指定的命令，通常用于生成代码、运行脚本、格式化文件、或者执行其他一些构建前的操作
+	# ./... 表示当前目录及所有子目录
 	go generate ./...
