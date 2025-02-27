@@ -37,9 +37,9 @@ func SecKillEngine() *gin.Engine {
 	// Q:多个中间件的执行顺序是怎样的？如何保证链式调用？
 	userRouter.Use(middleware.JWTAuth()) //这些请求都需要通过jwt做用户授权
 	{
-		userRouter.PATCH("/:username/coupons/:name", service.FetchCoupon)
-		userRouter.GET("/:username/coupons", service.GetCoupons)
-		userRouter.POST("/:username/coupons", service.AddCoupon)
+		userRouter.PATCH("/:username/lotterys/:name", service.FetchLottery)
+		userRouter.GET("/:username/lotterys", service.GetLotterys)
+		userRouter.POST("/:username/lotterys", service.AddLottery)
 	}
 
 	authRouter := router.Group("/service/auth") //登录和注销

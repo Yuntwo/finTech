@@ -16,9 +16,9 @@ import (
 const ErrMsgKey = "errMsg"
 const DataKey = "data"
 
-// FetchCoupon 秒杀优惠券，seller不允许获取优惠券
+// FetchLottery 秒杀优惠券，seller不允许获取优惠券
 // TODO 应该可以抽象为切面来处理的，但是go似乎没有切面的概念，中间件似乎不太适合做切面
-func FetchCoupon(ctx *gin.Context) {
+func FetchLottery(ctx *gin.Context) {
 	// 这里是业务逻辑的「授权(Authorization)」，用于判断合法用户是否有权访问当前资源(例如，某个用户是否可以获取优惠券，某个角色是否有权限执行某个操作)
 	claims := ctx.MustGet("claims").(*myjwt.CustomClaims)
 	if claims == nil {
@@ -29,21 +29,21 @@ func FetchCoupon(ctx *gin.Context) {
 	// 后续直接由gin Web框架根据gin.Context的内容打包成HTTP响应以及发送等
 
 	if claims.Kind == "seller" {
-		ctx.JSON(http.StatusUnauthorized, gin.H{ErrMsgKey: "Sellers aren't allowed to get coupons."})
+		ctx.JSON(http.StatusUnauthorized, gin.H{ErrMsgKey: "Sellers aren't allowed to get lotterys."})
 		return
 	}
 
 	// HTTP请求参数
 	paramSellerName := ctx.Param("username")
-	paramCouponName := ctx.Param("name")
+	paramLotteryName := ctx.Param("name")
 
 	// ---用户抢优惠券。后面需要高并发处理---
 	// 先在缓存执行原子性的秒杀操作。将原子性地完成"判断能否秒杀-执行秒杀"的步骤
-	_, err := redis.CacheAtomicSecKill(claims.Username, paramSellerName, paramCouponName)
+	_, err := redis.CacheAtomicSecKill(claims.Username, paramSellerName, paramLotteryName)
 	if err == nil {
-		coupon := redis.GetCoupon(paramCouponName)
+		lottery := redis.GetLottery(paramLotteryName)
 		// 交给[协程]完成数据库写入操作
-		SecKillChannel <- secKillMessage{claims.Username, coupon}
+		SecKillChannel <- secKillMessage{claims.Username, lottery}
 		ctx.JSON(http.StatusCreated, gin.H{ErrMsgKey: ""})
 		return
 	} else {
@@ -52,7 +52,7 @@ func FetchCoupon(ctx *gin.Context) {
 			ctx.JSON(http.StatusInternalServerError, gin.H{ErrMsgKey: err.Error()})
 			return
 		} else {
-			log.Println("Fail to fetch coupon. " + err.Error())
+			log.Println("Fail to fetch lottery. " + err.Error())
 			ctx.JSON(http.StatusNoContent, gin.H{})
 			return
 		}
@@ -60,7 +60,7 @@ func FetchCoupon(ctx *gin.Context) {
 }
 
 const (
-	couponPageSize int64 = 20
+	lotteryPageSize int64 = 20
 )
 
 // 工具函数 输出查询错误
@@ -74,30 +74,30 @@ func outputQueryError(ctx *gin.Context, err error) {
 	}
 }
 
-// 根据page页数, 取得合理切片范围的coupons
+// 根据page页数, 取得合理切片范围的lotterys
 // 需要保证切片索引startIndex, endIndex不越界
-func getValidCouponSlice(allCoupons []model.Coupon, page int64) []model.Coupon {
-	if len(allCoupons) == 0 {
-		return allCoupons
+func getValidLotterySlice(allLotterys []model.Lottery, page int64) []model.Lottery {
+	if len(allLotterys) == 0 {
+		return allLotterys
 	}
-	couponLen := int64(len(allCoupons))
-	startIndex := page * couponPageSize
-	endIndex := page*couponPageSize + couponPageSize
+	lotteryLen := int64(len(allLotterys))
+	startIndex := page * lotteryPageSize
+	endIndex := page*lotteryPageSize + lotteryPageSize
 	if startIndex < 0 {
 		startIndex = 0
-	} else if startIndex > couponLen {
-		startIndex = couponLen
+	} else if startIndex > lotteryLen {
+		startIndex = lotteryLen
 	}
 	if endIndex < 1 {
-		if couponLen < couponPageSize {
-			endIndex = couponLen
+		if lotteryLen < lotteryPageSize {
+			endIndex = lotteryLen
 		} else {
-			endIndex = couponPageSize
+			endIndex = lotteryPageSize
 		}
-	} else if endIndex > couponLen {
-		endIndex = couponLen
+	} else if endIndex > lotteryLen {
+		endIndex = lotteryLen
 	}
-	return allCoupons[startIndex:endIndex]
+	return allLotterys[startIndex:endIndex]
 }
 
 // 数据长度为空则返回204,否则返回200
@@ -109,8 +109,8 @@ func getDataStatusCode(len int) int {
 	}
 }
 
-// GetCoupons 查询优惠券
-func GetCoupons(ctx *gin.Context) {
+// GetLotterys 查询优惠券
+func GetLotterys(ctx *gin.Context) {
 	// 登陆检查token
 	claims := ctx.MustGet("claims").(*myjwt.CustomClaims)
 	if claims == nil {
@@ -140,7 +140,7 @@ func GetCoupons(ctx *gin.Context) {
 	// 数据库从0开始，但是查找从1开始
 	page = tmpPage - 1
 
-	//log.Printf("Querying coupon with name %s, page %d\n", queryUserName, page)
+	//log.Printf("Querying lottery with name %s, page %d\n", queryUserName, page)
 	// TODO: 查询用户需要从缓存查，这里需要改，是有错的。在主goroutine里查询数据库，会极大的拖慢处理速度
 	// 查找对应用户
 	queryUser := model.User{Username: queryUserName}
@@ -154,25 +154,25 @@ func GetCoupons(ctx *gin.Context) {
 	// 根据用户名查找其拥有/创建的优惠券
 	if queryUserName == claims.Username {
 		// 查询名与用户名相同，返回查询名用户拥有的优惠券
-		var allCoupons []model.Coupon
+		var allLotterys []model.Lottery
 		var err error
-		if allCoupons, err = redis.GetCoupons(claims.Username); err != nil {
+		if allLotterys, err = redis.GetLotterys(claims.Username); err != nil {
 			log.Println("Server error.")
 			ctx.JSON(http.StatusInternalServerError, gin.H{ErrMsgKey: "Server error."})
 			return
 		}
 
-		coupons := getValidCouponSlice(allCoupons, page)
+		lotterys := getValidLotterySlice(allLotterys, page)
 
 		if queryUser.IsSeller() {
-			sellerCoupons := model.ParseSellerResCoupons(coupons)
-			statusCode := getDataStatusCode(len(sellerCoupons))
-			ctx.JSON(statusCode, gin.H{ErrMsgKey: "", DataKey: sellerCoupons})
+			sellerLotterys := model.ParseSellerResLotterys(lotterys)
+			statusCode := getDataStatusCode(len(sellerLotterys))
+			ctx.JSON(statusCode, gin.H{ErrMsgKey: "", DataKey: sellerLotterys})
 			return
 		} else if queryUser.IsCustomer() {
-			customerCoupons := model.ParseCustomerResCoupons(coupons)
-			statusCode := getDataStatusCode(len(customerCoupons))
-			ctx.JSON(statusCode, gin.H{ErrMsgKey: "", DataKey: customerCoupons})
+			customerLotterys := model.ParseCustomerResLotterys(lotterys)
+			statusCode := getDataStatusCode(len(customerLotterys))
+			ctx.JSON(statusCode, gin.H{ErrMsgKey: "", DataKey: customerLotterys})
 			return
 		}
 	} else {
@@ -180,30 +180,30 @@ func GetCoupons(ctx *gin.Context) {
 		if queryUser.IsCustomer() {
 			// 不可查询其它顾客的优惠券
 			log.Println("Cannot check other customer.")
-			ctx.JSON(http.StatusUnauthorized, gin.H{ErrMsgKey: "Cannot check other customer.", DataKey: []model.Coupon{}})
+			ctx.JSON(http.StatusUnauthorized, gin.H{ErrMsgKey: "Cannot check other customer.", DataKey: []model.Lottery{}})
 			return
 		} else if queryUser.IsSeller() {
 			// 可以查询其它商家拥有的优惠券
-			var allCoupons []model.Coupon
+			var allLotterys []model.Lottery
 			var err error
-			if allCoupons, err = redis.GetCoupons(queryUserName); err != nil {
-				log.Println("Error when getting seller's coupons.")
-				ctx.JSON(http.StatusInternalServerError, gin.H{ErrMsgKey: "Error when getting seller's coupons.", DataKey: allCoupons})
+			if allLotterys, err = redis.GetLotterys(queryUserName); err != nil {
+				log.Println("Error when getting seller's lotterys.")
+				ctx.JSON(http.StatusInternalServerError, gin.H{ErrMsgKey: "Error when getting seller's lotterys.", DataKey: allLotterys})
 				return
 			}
-			coupons := getValidCouponSlice(allCoupons, page)
+			lotterys := getValidLotterySlice(allLotterys, page)
 
-			sellerCoupons := model.ParseSellerResCoupons(coupons)
-			statusCode := getDataStatusCode(len(sellerCoupons))
-			ctx.JSON(statusCode, gin.H{ErrMsgKey: "", DataKey: sellerCoupons})
+			sellerLotterys := model.ParseSellerResLotterys(lotterys)
+			statusCode := getDataStatusCode(len(sellerLotterys))
+			ctx.JSON(statusCode, gin.H{ErrMsgKey: "", DataKey: sellerLotterys})
 			return
 		}
 	}
 
 }
 
-// AddCoupon 商家添加优惠券
-func AddCoupon(ctx *gin.Context) {
+// AddLottery 商家添加优惠券
+func AddLottery(ctx *gin.Context) {
 	// 登陆检查token
 	claims := ctx.MustGet("claims").(*myjwt.CustomClaims)
 	if claims == nil {
@@ -213,56 +213,56 @@ func AddCoupon(ctx *gin.Context) {
 	}
 
 	if claims.Kind == "customer" { //!user.IsSeller() {
-		log.Println("Only sellers can create coupons.")
-		ctx.JSON(http.StatusUnauthorized, gin.H{ErrMsgKey: "Only sellers can create coupons."})
+		log.Println("Only sellers can create lotterys.")
+		ctx.JSON(http.StatusUnauthorized, gin.H{ErrMsgKey: "Only sellers can create lotterys."})
 		return
 	}
 
 	// 检查参数
 	paramUserName := ctx.Param("username") // 注意: 该参数是网址路径参数
-	var postCoupon model.ReqCoupon
-	if err := ctx.BindJSON(&postCoupon); err != nil {
+	var postLottery model.ReqLottery
+	if err := ctx.BindJSON(&postLottery); err != nil {
 		log.Println("Only receive JSON format.")
 		ctx.JSON(http.StatusBadRequest, gin.H{ErrMsgKey: "Only receive JSON format."})
 		return
 	}
-	couponName := postCoupon.Name
-	formAmount := postCoupon.Amount
-	description := postCoupon.Description
-	formStock := postCoupon.Stock
+	lotteryName := postLottery.Name
+	formAmount := postLottery.Amount
+	description := postLottery.Description
+	formStock := postLottery.Stock
 	if claims.Username != paramUserName {
-		log.Println("Cannot create coupons for other users.")
-		ctx.JSON(http.StatusUnauthorized, gin.H{ErrMsgKey: "Cannot create coupons for other users."})
+		log.Println("Cannot create lotterys for other users.")
+		ctx.JSON(http.StatusUnauthorized, gin.H{ErrMsgKey: "Cannot create lotterys for other users."})
 		return
 	}
 	amount := formAmount
 	stock := formStock
 
 	// 优惠券描述可以为空的，不需要检查长度
-	//if len(couponName) == 0 || len(description) == 0 {
-	//	ctx.JSON(http.StatusBadRequest, gin.H{ErrMsgKey: "Coupon name or description should not be empty."})
+	//if len(lotteryName) == 0 || len(description) == 0 {
+	//	ctx.JSON(http.StatusBadRequest, gin.H{ErrMsgKey: "Lottery name or description should not be empty."})
 	//	return
 	//}
 
 	// 在数据库添加优惠券
-	coupon := model.Coupon{
+	lottery := model.Lottery{
 		Username:    claims.Username,
-		CouponName:  couponName,
+		LotteryName: lotteryName,
 		Amount:      amount,
 		Left:        amount,
 		Stock:       stock,
 		Description: description,
 	}
 	var err error
-	err = dao.Db.Create(&coupon).Error
+	err = dao.Db.Create(&lottery).Error
 	if err != nil {
-		log.Println("Create failed. Maybe (username,coupon name) duplicates")
-		ctx.JSON(http.StatusBadRequest, gin.H{ErrMsgKey: "Create failed. Maybe (username,coupon name) duplicates"})
+		log.Println("Create failed. Maybe (username,lottery name) duplicates")
+		ctx.JSON(http.StatusBadRequest, gin.H{ErrMsgKey: "Create failed. Maybe (username,lottery name) duplicates"})
 		return
 	}
 
 	// 在Redis添加优惠券
-	if err = redis.CacheCouponAndHasCoupon(coupon); err != nil {
+	if err = redis.CacheLotteryAndHasLottery(lottery); err != nil {
 		log.Println("Create Cache failed. ", err.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{ErrMsgKey: "Create Cache failed. " + err.Error()})
 		return

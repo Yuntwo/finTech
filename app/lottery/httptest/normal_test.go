@@ -33,14 +33,14 @@ func testUsersLogin(e *httpexpect.Expect) {
 	demoCustomerLogin(e)
 }
 
-func isGetCouponUserNotExist(e *httpexpect.Expect, notExistUsername string) {
-	e.GET(getCouponPath, notExistUsername).
+func isGetLotteryUserNotExist(e *httpexpect.Expect, notExistUsername string) {
+	e.GET(getLotteryPath, notExistUsername).
 		Expect().
 		Status(http.StatusBadRequest).JSON().Object().
 		ValueEqual(service.ErrMsgKey, "Record not found.")
 }
 
-func testAddAndGetCoupon(e *httpexpect.Expect) {
+func testAddAndGetLottery(e *httpexpect.Expect) {
 	// 本函数按顺序做以下测试：
 	// 1. 商家未添加优惠券时，查不到优惠券
 	// 2. 商家添加优惠券成功
@@ -61,9 +61,9 @@ func testAddAndGetCoupon(e *httpexpect.Expect) {
 	isEmptyBody(e, demoSellerName, 0)
 	isEmptyBody(e, demoSellerName, veryLargePage)
 	// 不可查询其它用户
-	isGetCouponUnauthorized(e, demoArCustomerName, 0)
+	isGetLotteryUnauthorized(e, demoArCustomerName, 0)
 	// 查不到不存在的用户
-	isGetCouponUserNotExist(e, invalidCustomerName)
+	isGetLotteryUserNotExist(e, invalidCustomerName)
 
 	// --商家查询商家的优惠券--
 	demoSellerLogin(e)
@@ -71,17 +71,17 @@ func testAddAndGetCoupon(e *httpexpect.Expect) {
 	isEmptyBody(e, demoSellerName, 0)
 	isEmptyBody(e, demoSellerName, veryLargePage)
 	// 不可查询其它用户
-	isGetCouponUnauthorized(e, demoArCustomerName, 0)
+	isGetLotteryUnauthorized(e, demoArCustomerName, 0)
 	// 查不到不存在的用户
-	isGetCouponUserNotExist(e, invalidCustomerName)
+	isGetLotteryUserNotExist(e, invalidCustomerName)
 
 	// --创建demo优惠券--
-	demoAddCoupon(e)
+	demoAddLottery(e)
 
 	// --顾客查询该商家创建的优惠券信息--
 	demoCustomerLogin(e)
-	isNonEmptyCoupons(e, demoSellerName, -1)
-	isNonEmptyCoupons(e, demoSellerName, 0)
+	isNonEmptyLotterys(e, demoSellerName, -1)
+	isNonEmptyLotterys(e, demoSellerName, 0)
 	isEmptyBody(e, demoSellerName, veryLargePage)
 	isCustomerSchema(e, demoSellerName, 0)
 	// 自己没抢过优惠券，查询不到
@@ -89,38 +89,38 @@ func testAddAndGetCoupon(e *httpexpect.Expect) {
 	isEmptyBody(e, demoCustomerName, 0)
 	isEmptyBody(e, demoCustomerName, veryLargePage)
 	// 不可查询其它用户
-	isGetCouponUnauthorized(e, demoArCustomerName, 0)
+	isGetLotteryUnauthorized(e, demoArCustomerName, 0)
 	// 查不到不存在的用户
-	isGetCouponUserNotExist(e, invalidCustomerName)
+	isGetLotteryUserNotExist(e, invalidCustomerName)
 
 	// --商家查询到自己创建的优惠券信息--
 	demoSellerLogin(e)
-	isNonEmptyCoupons(e, demoSellerName, -1)
-	isNonEmptyCoupons(e, demoSellerName, 0)
+	isNonEmptyLotterys(e, demoSellerName, -1)
+	isNonEmptyLotterys(e, demoSellerName, 0)
 	isEmptyBody(e, demoSellerName, veryLargePage)
 	isSellerSchema(e, demoSellerName, 0)
 	// 不可查询其它用户
-	isGetCouponUnauthorized(e, demoArCustomerName, 0)
+	isGetLotteryUnauthorized(e, demoArCustomerName, 0)
 	// 查不到不存在的用户
-	isGetCouponUserNotExist(e, invalidCustomerName)
+	isGetLotteryUserNotExist(e, invalidCustomerName)
 }
 
-func testFetchCoupon(e *httpexpect.Expect, couponAmount int) {
+func testFetchLottery(e *httpexpect.Expect, lotteryAmount int) {
 	// demo顾客登录
 	demoCustomerLogin(e)
 
 	// 抢一张优惠券
-	fetchDemoCouponSuccess(e)
+	fetchDemoLotterySuccess(e)
 
 	// 商家优惠券数量-1 顾客可看到该优惠券。
-	isCouponExpectedLeft(e, demoSellerName, 0, 0, couponAmount-1)
-	isNonEmptyCoupons(e, demoSellerName, 0)
+	isLotteryExpectedLeft(e, demoSellerName, 0, 0, lotteryAmount-1)
+	isNonEmptyLotterys(e, demoSellerName, 0)
 	isSellerSchema(e, demoSellerName, 0)
-	isNonEmptyCoupons(e, demoCustomerName, 0)
+	isNonEmptyLotterys(e, demoCustomerName, 0)
 	isCustomerSchema(e, demoCustomerName, 0)
 
 	// 不可重复抢优惠券
-	fetchDemoCouponFail(e)
+	fetchDemoLotteryFail(e)
 }
 
 // 进行普通的测试，用户注册、登录后进行常规操作
@@ -138,8 +138,8 @@ func TestNormal(t *testing.T) {
 	testUsersLogin(e)
 
 	// 测试查看、添加优惠券功能
-	testAddAndGetCoupon(e)
+	testAddAndGetLottery(e)
 
 	// 优惠券已添加，测试抢购优惠券、查看优惠券功能
-	testFetchCoupon(e, demoAmount)
+	testFetchLottery(e, demoAmount)
 }

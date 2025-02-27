@@ -13,9 +13,9 @@ import (
 */
 
 /* 定义了添加优惠券的表格，函数等等 */
-const addCouponPath = "/service/users/{username}/coupons"
+const addLotteryPath = "/service/users/{username}/lotterys"
 
-type AddCouponForm struct {
+type AddLotteryForm struct {
 	Name        string `form:"name"`
 	Amount      string `form:"amount"` // 应当int
 	Description string `form:"description"`
@@ -23,114 +23,114 @@ type AddCouponForm struct {
 }
 
 // 定义了demo优惠券
-var demoCouponName = "my_coupon"
+var demoLotteryName = "my_lottery"
 var demoAmount = 10
 var demoStock = 50
-var demoAddCouponForm AddCouponForm = AddCouponForm{
-	Name:        demoCouponName,
+var demoAddLotteryForm AddLotteryForm = AddLotteryForm{
+	Name:        demoLotteryName,
 	Amount:      strconv.Itoa(demoAmount),
 	Stock:       strconv.Itoa(demoStock),
-	Description: "kiana: this is my good coupon",
+	Description: "kiana: this is my good lottery",
 }
 
 // 测试添加优惠券时的表格格式
-func testAddCouponWrongFormat(e *httpexpect.Expect) {
+func testAddLotteryWrongFormat(e *httpexpect.Expect) {
 	// 登录商家
 	logout(e)
 	demoSellerLogin(e)
 
 	// amount值不是数字
-	amountNotNumberForm := demoAddCouponForm
+	amountNotNumberForm := demoAddLotteryForm
 	amountNotNumberForm.Amount = "blah-blah"
-	e.POST(addCouponPath, demoSellerName).
+	e.POST(addLotteryPath, demoSellerName).
 		WithForm(amountNotNumberForm).
 		Expect().
 		Status(http.StatusBadRequest).JSON().Object().
 		ValueEqual(service.ErrMsgKey, "Amount field wrong format.")
 
 	// stock值不是数字
-	stockNotNumberForm := demoAddCouponForm
+	stockNotNumberForm := demoAddLotteryForm
 	stockNotNumberForm.Stock = "blah-blah"
-	e.POST(addCouponPath, demoSellerName).
+	e.POST(addLotteryPath, demoSellerName).
 		WithForm(stockNotNumberForm).
 		Expect().
 		Status(http.StatusBadRequest).JSON().Object().
 		ValueEqual(service.ErrMsgKey, "Stock field wrong format.")
 
 	// 优惠券名为空
-	emptyCouponNameForm := demoAddCouponForm
-	emptyCouponNameForm.Name = ""
-	e.POST(addCouponPath, demoSellerName).
-		WithForm(emptyCouponNameForm).
+	emptyLotteryNameForm := demoAddLotteryForm
+	emptyLotteryNameForm.Name = ""
+	e.POST(addLotteryPath, demoSellerName).
+		WithForm(emptyLotteryNameForm).
 		Expect().
 		Status(http.StatusBadRequest).JSON().Object().
-		ValueEqual(service.ErrMsgKey, "Coupon name or description should not be empty.")
+		ValueEqual(service.ErrMsgKey, "Lottery name or description should not be empty.")
 
 	// 优惠券描述为空
-	emptyDescriptionForm := demoAddCouponForm
+	emptyDescriptionForm := demoAddLotteryForm
 	emptyDescriptionForm.Description = ""
-	e.POST(addCouponPath, demoSellerName).
+	e.POST(addLotteryPath, demoSellerName).
 		WithForm(emptyDescriptionForm).
 		Expect().
 		Status(http.StatusBadRequest).JSON().Object().
-		ValueEqual(service.ErrMsgKey, "Coupon name or description should not be empty.")
+		ValueEqual(service.ErrMsgKey, "Lottery name or description should not be empty.")
 }
 
 // 测试非商家添加优惠券或为其它用户添加优惠券
-func testAddCouponWrongUser(e *httpexpect.Expect) {
+func testAddLotteryWrongUser(e *httpexpect.Expect) {
 	// 登录顾客
 	demoCustomerLogin(e)
 	// 顾客不可添加优惠券
-	e.POST(addCouponPath, demoCustomerName).
-		WithForm(demoAddCouponForm).
+	e.POST(addLotteryPath, demoCustomerName).
+		WithForm(demoAddLotteryForm).
 		Expect().
 		Status(http.StatusUnauthorized).JSON().Object().
-		ValueEqual(service.ErrMsgKey, "Only sellers can create coupons.")
+		ValueEqual(service.ErrMsgKey, "Only sellers can create lotterys.")
 
 	// 登录商家
 	demoSellerLogin(e)
 	// 不可为其它用户添加优惠券
-	e.POST(addCouponPath, demoCustomerName).
-		WithForm(demoAddCouponForm).
+	e.POST(addLotteryPath, demoCustomerName).
+		WithForm(demoAddLotteryForm).
 		Expect().
 		Status(http.StatusUnauthorized).JSON().Object().
-		ValueEqual(service.ErrMsgKey, "Cannot create coupons for other users.")
+		ValueEqual(service.ErrMsgKey, "Cannot create lotterys for other users.")
 }
 
 // 测试未登录添加优惠券
-func testAddCouponNotLogIn(e *httpexpect.Expect) {
+func testAddLotteryNotLogIn(e *httpexpect.Expect) {
 	logout(e)
 
-	e.POST(addCouponPath, demoSellerName).
-		WithForm(demoAddCouponForm).
+	e.POST(addLotteryPath, demoSellerName).
+		WithForm(demoAddLotteryForm).
 		Expect().
 		Status(http.StatusUnauthorized).JSON().Object().
 		ValueEqual(service.ErrMsgKey, "Not Logged in.")
 }
 
-func testAddCouponDuplicate(e *httpexpect.Expect) {
+func testAddLotteryDuplicate(e *httpexpect.Expect) {
 	demoSellerLogin(e)
 
-	e.POST(addCouponPath, demoSellerName).
-		WithForm(demoAddCouponForm).
+	e.POST(addLotteryPath, demoSellerName).
+		WithForm(demoAddLotteryForm).
 		Expect().
 		Status(http.StatusCreated).JSON().Object().
 		ValueEqual(service.ErrMsgKey, "")
 
 	// 添加重复优惠券失败
-	e.POST(addCouponPath, demoSellerName).
-		WithForm(demoAddCouponForm).
+	e.POST(addLotteryPath, demoSellerName).
+		WithForm(demoAddLotteryForm).
 		Expect().
 		Status(http.StatusBadRequest).JSON().Object().
-		ValueEqual(service.ErrMsgKey, "Create failed. Maybe (username,coupon name) duplicates")
+		ValueEqual(service.ErrMsgKey, "Create failed. Maybe (username,lottery name) duplicates")
 }
 
 // 添加demo优惠券(事先不得添加过)
-func demoAddCoupon(e *httpexpect.Expect) {
+func demoAddLottery(e *httpexpect.Expect) {
 	demoSellerLogin(e)
 
-	e.POST(addCouponPath, demoSellerName).
-		WithForm(demoAddCouponForm).
+	e.POST(addLotteryPath, demoSellerName).
+		WithForm(demoAddLotteryForm).
 		Expect().
 		Status(http.StatusCreated).JSON().Object().
 		ValueEqual(service.ErrMsgKey, "")

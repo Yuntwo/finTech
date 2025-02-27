@@ -8,7 +8,7 @@ import (
 
 type secKillMessage struct {
 	username string
-	coupon   model.Coupon
+	lottery  model.Lottery
 }
 
 const maxMessageNum = 20000
@@ -20,18 +20,18 @@ func secKillConsumer() { //从channel中读取信息，更新数据库（就是�
 		message := <-SecKillChannel
 		log.Println("Got one message: " + message.username)
 
-		username := message.username            //抢购成功的用户的用户名
-		sellerName := message.coupon.Username   //优惠券的商家名
-		couponName := message.coupon.CouponName //优惠券名
+		username := message.username               //抢购成功的用户的用户名
+		sellerName := message.lottery.Username     //优惠券的商家名
+		lotteryName := message.lottery.LotteryName //优惠券名
 
 		var err error
-		err = dao.UserHasCoupon(username, message.coupon) //用户优惠券数+1
+		err = dao.UserHasLottery(username, message.lottery) //用户优惠券数+1
 		if err != nil {
-			println("Error when inserting user's coupon. " + err.Error())
+			println("Error when inserting user's lottery. " + err.Error())
 		}
-		err = dao.DecreaseOneCouponLeft(sellerName, couponName) //优惠券库存自减1
+		err = dao.DecreaseOneLotteryLeft(sellerName, lotteryName) //优惠券库存自减1
 		if err != nil {
-			println("Error when decreasing coupon left. " + err.Error())
+			println("Error when decreasing lottery left. " + err.Error())
 		}
 	}
 

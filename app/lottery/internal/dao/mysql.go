@@ -40,10 +40,10 @@ func initMysql(config config.AppConfig) {
 
 	// 初始化数据库
 	user := model.User{}
-	coupon := &model.Coupon{}
+	lottery := &model.Lottery{}
 
 	// 创建表
-	tables := []interface{}{user, coupon}
+	tables := []interface{}{user, lottery}
 
 	for _, table := range tables {
 		if !Db.HasTable(table) {
@@ -59,8 +59,8 @@ func initMysql(config config.AppConfig) {
 	}
 
 	// 创建唯一索引
-	Db.Model(user).AddUniqueIndex("username_index", "username")                // 用户的用户名唯一
-	Db.Model(coupon).AddUniqueIndex("coupon_index", "username", "coupon_name") // 优惠券的(用户名, 优惠券名)唯一
+	Db.Model(user).AddUniqueIndex("username_index", "username")                   // 用户的用户名唯一
+	Db.Model(lottery).AddUniqueIndex("lottery_index", "username", "lottery_name") // 优惠券的(用户名, 优惠券名)唯一
 
 	println("---Mysql connection is initialized.---")
 	// 添加外键的demo代码

@@ -6,17 +6,17 @@ import (
 	"net/http"
 )
 
-var fetchCouponPath = "/service/users/{username}/coupons/{name}"
+var fetchLotteryPath = "/service/users/{username}/lotterys/{name}"
 
-func fetchDemoCouponSuccess(e *httpexpect.Expect) {
-	e.PATCH(fetchCouponPath, demoSellerName, demoCouponName).
+func fetchDemoLotterySuccess(e *httpexpect.Expect) {
+	e.PATCH(fetchLotteryPath, demoSellerName, demoLotteryName).
 		Expect().
 		Status(http.StatusCreated).JSON().Object().
 		ValueEqual(service.ErrMsgKey, "")
 }
 
-func fetchDemoCouponFail(e *httpexpect.Expect) {
-	e.PATCH(fetchCouponPath, demoSellerName, demoCouponName).
+func fetchDemoLotteryFail(e *httpexpect.Expect) {
+	e.PATCH(fetchLotteryPath, demoSellerName, demoLotteryName).
 		Expect().
 		Status(http.StatusNoContent).
 		Body().Empty()
