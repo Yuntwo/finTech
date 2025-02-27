@@ -21,12 +21,12 @@ func SecKillEngine() *gin.Engine {
 	router := gin.New()
 
 	// 设置session为Redis存储（但是后来没有用到session，而是用jwt来做用户授权）
-	config, err := config.GetAppConfig()
+	conf, err := config.GetAppConfig()
 	if err != nil {
-		panic("failed to load redisService config" + err.Error())
+		panic("failed to load redisService conf" + err.Error())
 	}
-	store, _ := redis.NewStore(config.App.Redis.MaxIdle, config.App.Redis.Network,
-		config.App.Redis.Address, config.App.Redis.Password, []byte("secKill"))
+	store, _ := redis.NewStore(conf.App.Redis.MaxIdle, conf.App.Redis.Network,
+		conf.App.Redis.Address, conf.App.Redis.Password, []byte("secKill"))
 	router.Use(sessions.Sessions(SessionHeaderKey, store))
 	gob.Register(&model.User{})
 
@@ -60,7 +60,8 @@ func SecKillEngine() *gin.Engine {
 		})
 	}
 
-	// 启动秒杀功能的消费者（用来异步更新数据库）
+	// 启动秒杀功能的消费者(用来异步更新数据库)
+	// TODO 应该放在这里吗？
 	service.RunSecKillConsumer()
 
 	return router

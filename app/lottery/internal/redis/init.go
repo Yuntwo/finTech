@@ -51,7 +51,7 @@ var secKillSHA string // SHA expression of secKillScript
 // 将数据加载到缓存预热，防止缓存穿透
 // 预热加载了商品库存key
 func preHeatKeys() {
-	lotterys, err := dao.GetAllLotterys()
+	lotterys, err := dao.GetAllLotteries()
 	if err != nil {
 		panic("Error when getting all lotterys." + err.Error())
 	}

@@ -15,7 +15,9 @@ const maxMessageNum = 20000
 
 var SecKillChannel = make(chan secKillMessage, maxMessageNum) //有缓存的channel
 
-func secKillConsumer() { //从channel中读取信息，更新数据库（就是当redis中优惠券数量减一时，就让数据库也减一）
+// 使用channel(其实类似消息队列)异步更新数据库(就是当redis中优惠券数量减1时，就让数据库也减1)
+// 这里相当于就是用channel来模拟消息队列，但实际上应该部署为一个独立的服务(如rabbitmq)
+func secKillConsumer() {
 	for {
 		message := <-SecKillChannel
 		log.Println("Got one message: " + message.username)
