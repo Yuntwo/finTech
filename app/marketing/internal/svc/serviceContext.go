@@ -1,7 +1,7 @@
 package svc
 
 import (
-	"mall-go/app/lottery/internal/config"
+	"mall-go/app/marketing/internal/config"
 
 	"github.com/google/wire"
 )

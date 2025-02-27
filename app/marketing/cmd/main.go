@@ -3,13 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
-	"mall-go/app/lottery/internal/dao"
-	"mall-go/app/lottery/internal/handler"
-	"mall-go/app/lottery/internal/redis"
+	"mall-go/app/marketing/internal/dao"
+	"mall-go/app/marketing/internal/handler"
+	"mall-go/app/marketing/internal/redis"
 	"net/http"
 	_ "net/http/pprof" // 加载这个包自动初始化执行它的init函数，启用性能分析路由，但不会把包中的内容暴露给当前文件；可以不使用这个包
 
-	"mall-go/app/lottery/internal/config"
+	"mall-go/app/marketing/internal/config"
 
 	"github.com/mix-plus/core/conf"
 )

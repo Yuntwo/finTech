@@ -5,8 +5,8 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"log"
-	"mall-go/app/lottery/internal/config"
-	"mall-go/app/lottery/internal/model"
+	"mall-go/app/marketing/internal/config"
+	"mall-go/app/marketing/internal/model"
 	"time"
 )
 

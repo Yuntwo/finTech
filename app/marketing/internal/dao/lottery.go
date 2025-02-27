@@ -2,7 +2,7 @@ package dao
 
 import (
 	"fmt"
-	"mall-go/app/lottery/internal/model"
+	"mall-go/app/marketing/internal/model"
 )
 
 func GetAllLotteries() ([]model.Lottery, error) {

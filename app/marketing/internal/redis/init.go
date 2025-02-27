@@ -1,8 +1,8 @@
 package redis
 
 import (
-	"mall-go/app/lottery/internal/config"
-	"mall-go/app/lottery/internal/dao"
+	"mall-go/app/marketing/internal/config"
+	"mall-go/app/marketing/internal/dao"
 )
 
 const secKillScript = `

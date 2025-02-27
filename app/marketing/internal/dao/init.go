@@ -1,7 +1,7 @@
 package dao
 
 import (
-	"mall-go/app/lottery/internal/config"
+	"mall-go/app/marketing/internal/config"
 )
 
 func init() {

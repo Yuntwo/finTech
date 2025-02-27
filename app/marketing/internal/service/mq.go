@@ -2,8 +2,8 @@ package service
 
 import (
 	"log"
-	"mall-go/app/lottery/internal/dao"
-	"mall-go/app/lottery/internal/model"
+	"mall-go/app/marketing/internal/dao"
+	"mall-go/app/marketing/internal/model"
 )
 
 type secKillMessage struct {

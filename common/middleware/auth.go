@@ -15,7 +15,8 @@ import (
 )
 
 // AuthMiddleware 这种JWT验证方法直接调用jwt包的token相关处理方法，不需要自己实现JWT类型，通过JWT实例来调用方法，更简洁
-// 鉴权核心参数其实只有一个secret
+// 鉴权核心参数其实只有一个secret，也是JWT中会有这个secret生成的签名
+// 注意这里只是验证JWT，没有生成，生成是在用户登录的接口中处理响应的
 func AuthMiddleware(secret string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 获取 token
@@ -64,7 +65,7 @@ func AuthMiddleware(secret string) gin.HandlerFunc {
 			c.Set("userId", claims["uid"])
 			c.Set("payload", claims)
 		}
-
+		// 必须显式调用下一个handler，否则会中断后续handler的执行
 		c.Next()
 	}
 }
@@ -93,7 +94,7 @@ func JWTAuth() gin.HandlerFunc {
 		j := NewJWT()
 		claims, err := j.ParseToken(token)
 		if err != nil {
-			if err == TokenExpired {
+			if errors.Is(err, TokenExpired) {
 				ctx.JSON(http.StatusUnauthorized, gin.H{ErrMsgKey: "Authorization has expired."})
 				ctx.Abort()
 				return

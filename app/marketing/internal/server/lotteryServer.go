@@ -1,12 +1,12 @@
 package server
 
 import (
-	lottery "mall-go/app/lottery/api/lottery/v1"
+	lottery "mall-go/app/marketing/api/lottery/v1"
 	"net/http"
 
 	"context"
 
-	"mall-go/app/lottery/internal/svc"
+	"mall-go/app/marketing/internal/svc"
 
 	"github.com/google/wire"
 	"github.com/mix-plus/go-mixplus/mrpc"

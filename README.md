@@ -118,6 +118,7 @@ deployment use kubernetes
 1. Add grpc checksum
 2. permission check
 3. grpc error handling
+-[ ] 重构营销系统: 营销投放、营销活动、营销资产
 
 
 # License

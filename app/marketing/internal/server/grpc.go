@@ -1,8 +1,8 @@
 package server
 
 import (
-	lottery "mall-go/app/lottery/api/lottery/v1"
-	"mall-go/app/lottery/internal/config"
+	lottery "mall-go/app/marketing/api/lottery/v1"
+	"mall-go/app/marketing/internal/config"
 
 	"github.com/mix-plus/go-mixplus/mrpc"
 	"google.golang.org/grpc"

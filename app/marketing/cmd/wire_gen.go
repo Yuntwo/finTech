@@ -7,9 +7,9 @@
 package main
 
 import (
-	"mall-go/app/lottery/internal/config"
-	"mall-go/app/lottery/internal/server"
-	"mall-go/app/lottery/internal/svc"
+	"mall-go/app/marketing/internal/config"
+	"mall-go/app/marketing/internal/server"
+	"mall-go/app/marketing/internal/svc"
 )
 
 import (

@@ -2,7 +2,7 @@ package redis
 
 import (
 	"github.com/go-redis/redis/v7"
-	"mall-go/app/lottery/internal/config"
+	"mall-go/app/marketing/internal/config"
 )
 
 var client *redis.Client

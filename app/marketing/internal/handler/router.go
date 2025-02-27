@@ -5,10 +5,10 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/redis"
 	"github.com/gin-gonic/gin"
-	"mall-go/app/lottery/internal/config"
-	"mall-go/app/lottery/internal/model"
-	redis2 "mall-go/app/lottery/internal/redis"
-	"mall-go/app/lottery/internal/service"
+	"mall-go/app/marketing/internal/config"
+	"mall-go/app/marketing/internal/model"
+	redis2 "mall-go/app/marketing/internal/redis"
+	"mall-go/app/marketing/internal/service"
 	"mall-go/common/middleware"
 )
 

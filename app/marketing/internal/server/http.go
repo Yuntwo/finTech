@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	lottery "mall-go/app/lottery/api/lottery/v1"
-	"mall-go/app/lottery/internal/config"
+	lottery "mall-go/app/marketing/api/lottery/v1"
+	"mall-go/app/marketing/internal/config"
 )
 
 func NewHttpServer(c *config.Config, srv *LotteryServer) *http.Server {
