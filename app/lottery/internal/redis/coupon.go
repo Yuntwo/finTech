@@ -29,7 +29,7 @@ func CacheHasCoupon(coupon model.Coupon) (int64, error) {
 }
 
 // CacheCoupon 缓存优惠券的完整信息
-func CacheCoupon(coupon model.Coupon) (string, error) {
+func CacheCoupon(coupon model.Coupon) (int64, error) {
 	key := getCouponKeyByCoupon(coupon)
 	fields := map[string]interface{}{
 		"id":          coupon.Id,

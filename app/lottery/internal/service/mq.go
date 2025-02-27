@@ -15,7 +15,7 @@ const maxMessageNum = 20000
 
 var SecKillChannel = make(chan secKillMessage, maxMessageNum) //有缓存的channel
 
-func seckillConsumer() { //从channel中读取信息，更新数据库（就是当redis中优惠券数量减一时，就让数据库也减一）
+func secKillConsumer() { //从channel中读取信息，更新数据库（就是当redis中优惠券数量减一时，就让数据库也减一）
 	for {
 		message := <-SecKillChannel
 		log.Println("Got one message: " + message.username)
@@ -42,7 +42,7 @@ var isConsumerRun = false
 func RunSecKillConsumer() {
 	// Only Run one consumer.
 	if !isConsumerRun {
-		go seckillConsumer() //开启一个消费者goroutune，作用是接收redis的改动信息，更新数据库
+		go secKillConsumer() //开启一个消费者goroutine，作用是接收redis的改动信息，更新数据库
 		isConsumerRun = true
 	}
 }

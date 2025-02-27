@@ -73,6 +73,7 @@ const ErrMsgKey = "errMsg"
 
 // JWTAuth JSON Web Token Auth
 // 注意这里JWT和token字符串的区别。JWT只是一种工具(包含属性和方法的类型)，包含对token的各种操作，而token是实际流转的字符串，但不是JWT的属性
+// TODO 这里主要做用户的身份验证「用户认证(Authentication)」，即判断是否为合法用户，比如是否过期、是否被篡改等
 func JWTAuth() gin.HandlerFunc {
 	// Q:gin.Context都有哪些内容，如何传递的？
 	// func创建了一个匿名函数(也可以理解为闭包，因为访问/引用了外部变量，Java就不能完美支持闭包)，接收ctx *gin.Context，符合gin.HandlerFunc的签名，因此可以作为gin路由的中间件使用

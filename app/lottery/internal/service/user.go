@@ -16,20 +16,24 @@ import (
 const ErrMsgKey = "errMsg"
 const DataKey = "data"
 
-// FetchCoupon 秒杀优惠券
+// FetchCoupon 秒杀优惠券，seller不允许获取优惠券
+// TODO 应该可以抽象为切面来处理的，但是go似乎没有切面的概念，中间件似乎不太适合做切面
 func FetchCoupon(ctx *gin.Context) {
-	// 登陆检查token
+	// 这里是业务逻辑的「授权(Authorization)」，用于判断合法用户是否有权访问当前资源(例如，某个用户是否可以获取优惠券，某个角色是否有权限执行某个操作)
 	claims := ctx.MustGet("claims").(*myjwt.CustomClaims)
 	if claims == nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{ErrMsgKey: "Not Authorized."})
 		return
 	}
 
-	if claims.Kind == "saler" { //user.IsSeller() {
+	// 后续直接由gin Web框架根据gin.Context的内容打包成HTTP响应以及发送等
+
+	if claims.Kind == "seller" {
 		ctx.JSON(http.StatusUnauthorized, gin.H{ErrMsgKey: "Sellers aren't allowed to get coupons."})
 		return
 	}
 
+	// HTTP请求参数
 	paramSellerName := ctx.Param("username")
 	paramCouponName := ctx.Param("name")
 
@@ -37,7 +41,6 @@ func FetchCoupon(ctx *gin.Context) {
 	// 先在缓存执行原子性的秒杀操作。将原子性地完成"判断能否秒杀-执行秒杀"的步骤
 	_, err := redis.CacheAtomicSecKill(claims.Username, paramSellerName, paramCouponName)
 	if err == nil {
-		//log.Println(fmt.Sprintf("result: %d", secKillRes))
 		coupon := redis.GetCoupon(paramCouponName)
 		// 交给[协程]完成数据库写入操作
 		SecKillChannel <- secKillMessage{claims.Username, coupon}
@@ -49,11 +52,10 @@ func FetchCoupon(ctx *gin.Context) {
 			ctx.JSON(http.StatusInternalServerError, gin.H{ErrMsgKey: err.Error()})
 			return
 		} else {
-			//log.Println("Fail to fetch coupon. " + err.Error())
+			log.Println("Fail to fetch coupon. " + err.Error())
 			ctx.JSON(http.StatusNoContent, gin.H{})
 			return
 		}
-		// 可在此将err输出到log.
 	}
 }
 

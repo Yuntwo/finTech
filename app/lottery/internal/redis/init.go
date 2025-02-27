@@ -13,25 +13,34 @@ const secKillScript = `
     -- 返回值有-1, -2, -3, 都代表抢购失败
     -- 返回值为1代表抢购成功
 
-    -- Check if coupon exists and is cached
-	local couponLeft = redis.call("hget", KEYS[3], "left");
+    -- **第一大步: Check if coupon exists and has left** --
+	local couponLeft = redis.call("hget", KEYS[3], "left"); -- left是优惠券信息Hash中的一个字段
+    -- 上述脚本执行结构可能返回false或者成功实际结果
+    -- 返回false有以下3种情况:
+    -- 1. KEYS[3]这个Key不存在
+    -- 2. KEYS[3]这个Key存在但不是哈希类型，因为hget只能用于哈希类型
+    -- 3. KEYS[3]这个Key存在且是哈希类型，但是没有left字段，因为hget只能返回指定字段的值，否则返回false而不是空值或者其它类型。
+    -- 后两种情况从业务逻辑的正确性保证来说应该不存在
 	if (couponLeft == false)
 	then
 		return -2;  -- No such coupon
 	end
-	if (tonumber(couponLeft) == 0)  --- couponLeft是字符串类型
+    -- 执行成功返回实际KEYS[3]中left字段的值
+	if (tonumber(couponLeft) == 0)  -- left的值为0代表没有库存了
     then
-		return -3;  --  No Coupon Left.
+		return -3;  --  No Coupon Left
 	end
 
-    -- Check if the user has got the coupon --
+    -- **第二大步: Check if the user has got the coupon** --
+    -- Set命令，SISMEMBER key member，判断member元素是否是集合key的成员
+    -- redis命令本身大小写不敏感，但是命令参数大小写敏感。这里SISMEMBER也可以写作sismember等
 	local userHasCoupon = redis.call("SISMEMBER", KEYS[1], KEYS[2]);
 	if (userHasCoupon == 1)
 	then
 		return -1;
 	end
 
-    -- User gets the coupon --
+    -- **第三大步: 优惠券存在且有库存、用户也没有获得过这个优惠券时，User gets the coupon，涉及到两个key --
 	redis.call("hset", KEYS[3], "left", couponLeft - 1);
 	redis.call("SADD", KEYS[1], KEYS[2]);
 	return 1;
@@ -66,6 +75,9 @@ func init() {
 	initRedisConnection(config)
 
 	// 让redis加载秒杀的lua脚本
+
+	// 将Lua脚本secKillScript预先加载到Redis，返回其SHA1值(有则直接返回没有则计算)。
+	// 通过SHA1值查找对应缓存的脚本，避免每次执行时都需要重新传输脚本，没有的话会报错找不到脚本。
 	secKillSHA = PrepareScript(secKillScript)
 
 	// 预热

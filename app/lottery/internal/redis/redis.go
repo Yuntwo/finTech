@@ -59,9 +59,9 @@ func SetForever(key string, value interface{}) (string, error) {
 	return val, err
 }
 
-// SetMapForever redis operation hmset
-func SetMapForever(key string, field map[string]interface{}) (string, error) {
-	return client.HMSet(key, field).Result()
+// SetMapForever redis operation hset
+func SetMapForever(key string, field map[string]interface{}) (int64, error) {
+	return client.HSet(key, field).Result()
 }
 
 // GetMap redis operation hmget
