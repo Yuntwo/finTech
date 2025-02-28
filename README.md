@@ -124,3 +124,5 @@ deployment use kubernetes
 # License
 
 Apache License Version 2.0, http://www.apache.org/licenses/
+
+Testing是随机顺序，但不是并行的，所以不会有并发问题，可以通过t.Parallel()方法设置并行测试

@@ -32,8 +32,10 @@ func main() {
 		panic(err)
 	}
 
+	// 注意这个服务器运行是阻塞的，除非代码中有退出调用或者中断等情况
 	app.Run()
 
+	// TODO 融合一下这两个服务器
 	// Separate HTTP server from Gin
 	router := handler.SecKillEngine() //路由跳转都写在这里
 	defer dao.Close()

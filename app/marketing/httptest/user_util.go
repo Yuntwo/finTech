@@ -1,9 +1,9 @@
 package httptest
 
 import (
-	"SecKill/internal/model"
-	"SecKill/internal/service"
 	"github.com/gavv/httpexpect"
+	"mall-go/app/marketing/internal/model"
+	"mall-go/app/marketing/internal/service"
 	"net/http"
 )
 

@@ -17,6 +17,7 @@ import (
 // SessionHeaderKey Visible for test
 const SessionHeaderKey = "Authorization"
 
+// TODO 是不是应该放在server中
 func SecKillEngine() *gin.Engine {
 	router := gin.New()
 

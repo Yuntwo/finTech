@@ -1,9 +1,10 @@
 package httptest
 
 import (
-	"SecKill/internal/data"
-	"SecKill/internal/service"
 	"github.com/gavv/httpexpect"
+	"mall-go/app/marketing/internal/dao"
+	"mall-go/app/marketing/internal/redis"
+	"mall-go/app/marketing/internal/service"
 	"net/http"
 	"testing"
 )
@@ -126,7 +127,8 @@ func testFetchLottery(e *httpexpect.Expect, lotteryAmount int) {
 // 进行普通的测试，用户注册、登录后进行常规操作
 func TestNormal(t *testing.T) {
 	_, e := startServer(t)
-	defer data.Close()
+	defer dao.Close()
+	defer redis.Close()
 
 	// 注册用户,商家
 	registerDemoUsers(e)

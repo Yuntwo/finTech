@@ -17,6 +17,7 @@ require (
 	github.com/go-session/redis v3.0.1+incompatible
 	github.com/go-session/session v3.1.2+incompatible
 	github.com/golang-jwt/jwt/v4 v4.5.0
+	github.com/gavv/httpexpect v2.0.0+incompatible
 	github.com/golang/protobuf v1.5.4
 	github.com/google/uuid v1.6.0
 	github.com/google/wire v0.5.0

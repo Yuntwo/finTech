@@ -1,11 +1,12 @@
 package httptest
 
 import (
-	"SecKill/internal/data"
-	"SecKill/internal/engine"
-	"SecKill/internal/model"
-	"SecKill/internal/service"
 	"github.com/gavv/httpexpect"
+	"mall-go/app/marketing/internal/dao"
+	"mall-go/app/marketing/internal/handler"
+	"mall-go/app/marketing/internal/model"
+	"mall-go/app/marketing/internal/redis"
+	"mall-go/app/marketing/internal/service"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -16,7 +17,7 @@ const registerUserPath = "/service/users/"
 
 func startServer(t *testing.T) (*httptest.Server, *httpexpect.Expect) {
 	// 启动服务器
-	server := httptest.NewServer(engine.SecKillEngine())
+	server := httptest.NewServer(handler.SecKillEngine())
 
 	// 通过server创建测试引擎
 	return server, httpexpect.WithConfig(httpexpect.Config{
@@ -111,7 +112,8 @@ func testDuplicateRegisterSeller(e *httpexpect.Expect) {
 
 func TestRegisterCases(t *testing.T) {
 	_, e := startServer(t)
-	defer data.Close()
+	defer dao.Close()
+	defer redis.Close()
 
 	// 注册失败
 	testFormat(e)
