@@ -33,6 +33,7 @@ func main() {
 	logger := di.Zap()
 	server := di.Server()
 
+	// 这里只实例化了一次Context，后续所有接口都共用这一个实例
 	svc.Context = svc.NewServiceContext(c)
 
 	gin.SetMode(c.Mode)

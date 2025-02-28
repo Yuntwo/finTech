@@ -10,17 +10,6 @@ import (
 	"testing"
 )
 
-func TestMain(m *testing.M) {
-	// TODO 应该在TestMain中启动服务器吧
-	//_, e := startServer(m)
-	//defer dao.Close()
-	//defer redis.Close()
-	//
-	//registerDemoUsers(e)
-
-	m.Run()
-}
-
 /*
 该文件下依赖于注册过的demo用户，需要先调用registerDemoUsers
 该文件定义了添加优惠券的各种函数
@@ -29,7 +18,7 @@ func TestMain(m *testing.M) {
 // 接连测试多个函数
 func TestAddLotteryWrongCases(t *testing.T) {
 	_, e := startServer(t)
-	// TODO 这样写成子函数主要是方便数据源的清理，但是就不知道是哪个函数出错了，还是应该分开写
+	// TODO 这样写成子函数主要是方便数据源的清理，但是就不知道是哪个函数出错了，还是应该分开写，但这属于集成测试
 	defer dao.Close()
 	defer redis.Close()
 

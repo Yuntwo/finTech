@@ -8,6 +8,7 @@ import (
 	"mall-go/app/user/cmd/pb"
 )
 
+// 这里的API指的是HTTP接口，每一个函数封装其实就是调对应的RPC接口
 type UserLogic struct {
 }
 

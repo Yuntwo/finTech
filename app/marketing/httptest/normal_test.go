@@ -9,6 +9,8 @@ import (
 	"testing"
 )
 
+// TODO 不好重构
+
 const loginPath = "/service/users/"
 
 // 测试登录不存在的用户或错误的密码
